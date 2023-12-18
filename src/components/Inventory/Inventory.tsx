@@ -1,18 +1,32 @@
-import React, { type FC } from "react";
+import React, { useEffect, type FC, useState } from "react";
+import { items } from "@/items/items";
 
 const Inventory: FC = () => {
-  const arr = new Array(31).fill(null);
+  const [emptyItems, setEmptyItems] = useState<null[]>([]);
+
+  useEffect(() => {
+    const emptyArr = new Array(32 - items.length).fill(null);
+    setEmptyItems(emptyArr);
+  }, []);
 
   return (
-    <ul className="grid-rows-inventoryRows grid-cols-inventoryCols  grid w-[790px]">
-      <li className="border-borderColor h-[99px] w-[70px] border-[1px] border-solid">
-        <div className="bg-grey h-full w-full"></div>
+    <ul className="grid w-[790px]  grid-cols-inventoryCols grid-rows-inventoryRows">
+      {items.map((item) => (
+        <li
+          className="h-[99px] w-[70px] border-[1px] border-solid border-borderColor"
+          key={item.id}
+        >
+          <div className="h-full w-full bg-grey"></div>
+        </li>
+      ))}
+      <li className="h-[99px] w-[70px] border-[1px] border-solid border-borderColor">
+        <div className="h-full w-full bg-grey"></div>
       </li>
-      <li className="border-borderColor h-[99px] w-[70px] border-[1px] border-solid">
-        <div className="bg-grey h-full w-full"></div>
-      </li>
-      {arr.map(() => (
-        <li className="border-borderColor h-[99px] w-[70px] border-[1px] border-solid"></li>
+      {emptyItems.map((_, index) => (
+        <li
+          className="h-[99px] w-[70px] border-[1px] border-solid border-borderColor"
+          key={index}
+        ></li>
       ))}
     </ul>
   );
