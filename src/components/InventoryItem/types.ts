@@ -1,6 +1,6 @@
 import { type Id } from "@/types/types";
 
-export type InventoryItem = {
+export type TInventoryItem = {
   id: Id;
   inventoryId: Id;
   content: string;
