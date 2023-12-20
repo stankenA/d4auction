@@ -1,14 +1,20 @@
 import { useState, type FC } from "react";
 import Inventory from "../Inventory/Inventory";
-import { DndContext, DragOverlay, type DragStartEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  type DragEndEvent,
+  DragOverlay,
+  type DragStartEvent,
+} from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { type TInventoryItem } from "../InventoryItem/types";
-import { createPortal } from "react-dom";
 import InventoryItem from "../InventoryItem/InventoryItem";
 import { Portal } from "../Portal/Portal";
+import { type Id } from "@/types/types";
 
 const MainPage: FC = () => {
   const inventoriesId = ["A", "B"];
+  const [parent, setParent] = useState<Id | null>(null);
   const [activeItem, setActiveItem] = useState<TInventoryItem | null>(null);
   const [inventoryItems, setInventoryItems] = useState<TInventoryItem[]>([
     {
@@ -34,17 +40,24 @@ const MainPage: FC = () => {
     }
   }
 
+  function handleDragEnd(evt: DragEndEvent) {
+    if (evt.over) {
+      setParent(evt.over.id);
+    }
+  }
+
   return (
-    <DndContext onDragStart={startDrag}>
+    <DndContext onDragStart={startDrag} onDragEnd={handleDragEnd}>
       <main className="flex min-h-screen w-full flex-col items-center justify-center gap-[50px] bg-black font-sans text-white">
-        <SortableContext items={inventoriesId}>
-          {inventoriesId.map((id) => (
-            <Inventory
-              key={id}
-              items={inventoryItems.filter((item) => item.inventoryId === id)}
-            />
-          ))}
-        </SortableContext>
+        {inventoriesId.map((id) => (
+          <Inventory
+            key={id}
+            inventoryId={id}
+            items={inventoryItems.filter((item) => item.inventoryId === id)}
+            parent={parent}
+            setParent={setParent}
+          />
+        ))}
       </main>
 
       <Portal>

@@ -4,48 +4,25 @@ import React, {
   type PropsWithChildren,
 } from "react";
 import { type TInventoryItem } from "./types";
-import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useDraggable } from "@dnd-kit/core";
 
 type InventoryItemProps = PropsWithChildren & {
   item: TInventoryItem;
 };
 
 const InventoryItem: FC<InventoryItemProps> = ({ children, item }) => {
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { setNodeRef, attributes, listeners, transform } = useDraggable({
     id: item.id,
     data: {
       type: "Item",
-      item: item,
+      item,
     },
   });
 
   const style: CSSProperties = {
-    transition,
     transform: CSS.Transform.toString(transform),
   };
-
-  if (isDragging) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-        className="h-full w-full bg-grey opacity-80"
-      >
-        {item.id}
-        {children}
-      </div>
-    );
-  }
 
   return (
     <div

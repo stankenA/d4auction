@@ -4,4 +4,5 @@ export type TInventoryItem = {
   id: Id;
   inventoryId: Id;
   content: string;
+  parentId?: Id;
 };
