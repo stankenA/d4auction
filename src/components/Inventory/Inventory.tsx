@@ -8,8 +8,6 @@ import InventoryItem from "../InventoryItem/InventoryItem";
 type Inventory = {
   items: TInventoryArr;
   inventoryId: Id;
-  parentCellId: Id | null;
-  setParentCellId?: Dispatch<SetStateAction<Id | null>>;
 };
 
 const Inventory: FC<Inventory> = ({ items, inventoryId }) => {
@@ -17,7 +15,13 @@ const Inventory: FC<Inventory> = ({ items, inventoryId }) => {
     <ul className="grid w-[790px] grid-cols-inventoryCols grid-rows-inventoryRows">
       {items.map((item, i) => (
         <InventoryCell inventoryId={inventoryId} index={i} key={i}>
-          {item.item ? <InventoryItem item={item.item} /> : null}
+          {item.item ? (
+            <InventoryItem
+              item={item.item}
+              index={i}
+              inventoryId={inventoryId}
+            />
+          ) : null}
         </InventoryCell>
       ))}
     </ul>

@@ -1,33 +1,28 @@
 type Item = {
   id: number;
-  name: string;
-  img: string;
+  content: string;
 };
 
-export const items: Item[] = [
+export const initialInventoryA: { item: Item }[] = [
   {
-    id: 1,
-    name: "wow",
-    img: "http",
+    item: {
+      id: 1,
+      content: "bruh",
+    },
   },
   {
-    id: 2,
-    name: "wow",
-    img: "http",
+    item: {
+      id: 2,
+      content: "bruh",
+    },
   },
+];
+
+export const initialInventoryB = [
   {
-    id: 3,
-    name: "wow",
-    img: "http",
-  },
-  {
-    id: 4,
-    name: "wow",
-    img: "http",
-  },
-  {
-    id: 5,
-    name: "wow",
-    img: "http",
+    item: {
+      id: 3,
+      content: "bruh",
+    },
   },
 ];

@@ -1,4 +1,10 @@
-import { useState, type FC } from "react";
+import {
+  useState,
+  type FC,
+  useEffect,
+  type SetStateAction,
+  type Dispatch,
+} from "react";
 import Inventory from "../Inventory/Inventory";
 import {
   DndContext,
@@ -9,6 +15,7 @@ import {
 import { type TInventoryItem } from "../InventoryItem/types";
 import { type Id } from "@/types/types";
 import { createArrayOfEmptyItems } from "@/utils/createArray";
+import { initialInventoryA, initialInventoryB } from "@/items/items";
 
 export type TInventoryArr = Array<{ item: TInventoryItem | null }>;
 
@@ -22,8 +29,71 @@ const MainPage: FC = () => {
     createArrayOfEmptyItems(33),
   );
 
-  const [parentCellId, setParentCellId] = useState<Id | null>(null);
   const [activeItem, setActiveItem] = useState<TInventoryItem | null>(null);
+
+  function swapElementsInsideArray(
+    prevIndex: number,
+    newIndex: number,
+    array: TInventoryArr,
+  ) {
+    [array[prevIndex], array[newIndex]] = [array[newIndex], array[prevIndex]];
+    return array.slice();
+  }
+
+  function swapElementsBetweenArrays(
+    index1: number,
+    index2: number,
+    array1: TInventoryArr,
+    array2: TInventoryArr,
+    setArray1: Dispatch<SetStateAction<TInventoryArr>>,
+    setArray2: Dispatch<SetStateAction<TInventoryArr>>,
+  ) {
+    const temp = array1[index1];
+    array1[index1] = array2[index2];
+    array2[index2] = temp;
+
+    setArray1(array1.slice());
+    setArray2(array2.slice());
+  }
+
+  function handleDragEnd(evt: DragEndEvent) {
+    if (!evt.over) return;
+
+    const overCellData = evt.over.data.current!;
+    const activeItemData = evt.active.data.current!;
+
+    if (overCellData.inventoryId === activeItemData.inventoryId) {
+      const newArr = swapElementsInsideArray(
+        overCellData.index as number,
+        activeItemData.index as number,
+        overCellData.inventoryId === "A" ? inventoryA : inventoryB,
+      );
+
+      overCellData.inventoryId === "A"
+        ? setInventoryA(newArr)
+        : setInventoryB(newArr);
+    } else {
+      if (overCellData.inventoryId === "B") {
+        swapElementsBetweenArrays(
+          activeItemData.index as number,
+          overCellData.index as number,
+          inventoryA,
+          inventoryB,
+          setInventoryA,
+          setInventoryB,
+        );
+      } else {
+        swapElementsBetweenArrays(
+          activeItemData.index as number,
+          overCellData.index as number,
+          inventoryB,
+          inventoryA,
+          setInventoryB,
+          setInventoryA,
+        );
+      }
+    }
+  }
 
   // function handleDragStart(evt: DragStartEvent) {
   //   if (evt.active.data.current?.type === "Item") {
@@ -31,11 +101,17 @@ const MainPage: FC = () => {
   //   }
   // }
 
-  function handleDragEnd(evt: DragEndEvent) {
-    if (evt.over) {
-      setParentCellId(evt.over.id);
-    }
-  }
+  useEffect(() => {
+    setInventoryA([
+      ...initialInventoryA,
+      ...inventoryA.slice(0, inventoryA.length - initialInventoryA.length),
+    ]);
+
+    setInventoryB([
+      ...initialInventoryB,
+      ...inventoryB.slice(0, inventoryB.length - initialInventoryB.length),
+    ]);
+  }, []);
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
@@ -45,8 +121,6 @@ const MainPage: FC = () => {
             key={id}
             inventoryId={id}
             items={id === "A" ? inventoryA : inventoryB}
-            parentCellId={parentCellId}
-            setParentCellId={setParentCellId}
           />
         ))}
       </main>

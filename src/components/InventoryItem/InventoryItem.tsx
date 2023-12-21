@@ -6,17 +6,26 @@ import React, {
 import { type TInventoryItem } from "./types";
 import { CSS } from "@dnd-kit/utilities";
 import { useDraggable } from "@dnd-kit/core";
+import { type Id } from "@/types/types";
 
 type InventoryItemProps = PropsWithChildren & {
   item: TInventoryItem;
+  index: number;
+  inventoryId: Id;
 };
 
-const InventoryItem: FC<InventoryItemProps> = ({ children, item }) => {
+const InventoryItem: FC<InventoryItemProps> = ({
+  children,
+  item,
+  index,
+  inventoryId,
+}) => {
   const { setNodeRef, attributes, listeners, transform } = useDraggable({
     id: item.id,
     data: {
-      type: "Item",
       item,
+      inventoryId,
+      index,
     },
   });
 

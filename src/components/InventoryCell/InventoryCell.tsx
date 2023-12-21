@@ -1,5 +1,5 @@
 import { type Id } from "@/types/types";
-import { useDroppable } from "@dnd-kit/core";
+import { UseDroppableArguments, useDroppable } from "@dnd-kit/core";
 import React, {
   type PropsWithChildren,
   type FC,
@@ -7,16 +7,12 @@ import React, {
   useId,
 } from "react";
 
-type InventoryCellProps = PropsWithChildren & {
+export type InventoryCell = PropsWithChildren & {
   inventoryId: Id;
   index: number;
 };
 
-const InventoryCell: FC<InventoryCellProps> = ({
-  children,
-  inventoryId,
-  index,
-}) => {
+const InventoryCell: FC<InventoryCell> = ({ children, inventoryId, index }) => {
   const cellId = useId();
 
   const { isOver, setNodeRef } = useDroppable({
