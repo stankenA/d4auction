@@ -19,6 +19,17 @@ import { initialInventoryA, initialInventoryB } from "@/items/items";
 
 export type TInventoryArr = Array<{ item: TInventoryItem | null }>;
 
+type EvtOverData = {
+      item: TInventoryItem;
+      inventoryId: Id;
+      index: number;
+};
+
+type EvtActiveData = {
+  inventoryId: Id
+      index: number;
+}
+
 const MainPage: FC = () => {
   const inventoriesId = ["A", "B"];
 
@@ -36,36 +47,33 @@ const MainPage: FC = () => {
     newIndex: number,
     array: TInventoryArr,
   ) {
-    [array[prevIndex], array[newIndex]] = [array[newIndex], array[prevIndex]];
-    return array.slice();
+    [array[prevIndex], array[newIndex]] = [array[newIndex]!, array[prevIndex]!];
+    return [...array];
   }
 
   function swapElementsBetweenArrays(
-    index1: number,
-    index2: number,
-    array1: TInventoryArr,
-    array2: TInventoryArr,
-    setArray1: Dispatch<SetStateAction<TInventoryArr>>,
-    setArray2: Dispatch<SetStateAction<TInventoryArr>>,
+    indexA: number,
+    indexB: number,
+    arrayA: TInventoryArr,
+    arrayB: TInventoryArr,
   ) {
-    const temp = array1[index1];
-    array1[index1] = array2[index2];
-    array2[index2] = temp;
+    const temp = arrayA[indexA]!;
+    arrayA[indexA] = arrayB[indexB]!;
+    arrayB[indexB] = temp;
 
-    setArray1(array1.slice());
-    setArray2(array2.slice());
+    return [[...arrayA], [...arrayB]];
   }
 
   function handleDragEnd(evt: DragEndEvent) {
     if (!evt.over) return;
 
-    const overCellData = evt.over.data.current!;
-    const activeItemData = evt.active.data.current!;
+    const overCellData = evt.over.data.current as EvtOverData;
+    const activeItemData = evt.active.data.current as EvtActiveData;
 
     if (overCellData.inventoryId === activeItemData.inventoryId) {
       const newArr = swapElementsInsideArray(
-        overCellData.index as number,
-        activeItemData.index as number,
+        overCellData.index ,
+        activeItemData.index,
         overCellData.inventoryId === "A" ? inventoryA : inventoryB,
       );
 
@@ -74,23 +82,25 @@ const MainPage: FC = () => {
         : setInventoryB(newArr);
     } else {
       if (overCellData.inventoryId === "B") {
-        swapElementsBetweenArrays(
-          activeItemData.index as number,
-          overCellData.index as number,
+        const [arrayA, arrayB] = swapElementsBetweenArrays(
+          activeItemData.index,
+          overCellData.index ,
           inventoryA,
-          inventoryB,
-          setInventoryA,
-          setInventoryB,
+          inventoryB
         );
+
+        setInventoryA(arrayA!);
+        setInventoryB(arrayB!);
       } else {
-        swapElementsBetweenArrays(
-          activeItemData.index as number,
-          overCellData.index as number,
+        const [arrayB, arrayA] = swapElementsBetweenArrays(
+          activeItemData.index,
+          overCellData.index ,
           inventoryB,
-          inventoryA,
-          setInventoryB,
-          setInventoryA,
+          inventoryA
         );
+
+        setInventoryA(arrayA!);
+        setInventoryB(arrayB!);
       }
     }
   }
