@@ -106,11 +106,11 @@ const MainPage: FC = () => {
     }
   }
 
-  // function handleDragStart(evt: DragStartEvent) {
-  //   if (evt.active.data.current?.type === "Item") {
-  //     setActiveItem(evt.active.data.current.item as TInventoryItem);
-  //   }
-  // }
+  function handleDragStart(evt: DragStartEvent) {
+    if (evt.active.data.current) {
+      setActiveItem(evt.active.data.current.item as TInventoryItem);
+    }
+  }
 
   useEffect(() => {
     setInventoryA([
@@ -125,7 +125,7 @@ const MainPage: FC = () => {
   }, []);
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <main className="flex min-h-screen w-full flex-col items-center justify-center gap-[50px] bg-black font-sans text-white">
         {inventoriesId.map((id) => (
           <Inventory
@@ -136,9 +136,9 @@ const MainPage: FC = () => {
         ))}
       </main>
 
-      {/* <DragOverlay>
+      <DragOverlay>
         {activeItem && <InventoryItem item={activeItem} />}
-      </DragOverlay> */}
+      </DragOverlay>
     </DndContext>
   );
 };

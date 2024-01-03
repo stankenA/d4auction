@@ -11,8 +11,8 @@ import Image from "next/image";
 
 type InventoryItemProps = PropsWithChildren & {
   item: TInventoryItem;
-  index: number;
-  inventoryId: Id;
+  index?: number;
+  inventoryId?: Id;
 };
 
 const InventoryItem: FC<InventoryItemProps> = ({
