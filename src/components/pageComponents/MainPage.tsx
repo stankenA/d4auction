@@ -16,19 +16,20 @@ import { type TInventoryItem } from "../InventoryItem/types";
 import { type Id } from "@/types/types";
 import { createArrayOfEmptyItems } from "@/utils/createArray";
 import { initialInventoryA, initialInventoryB } from "@/items/items";
+import InventoryItem from "../InventoryItem/InventoryItem";
 
 export type TInventoryArr = Array<{ item: TInventoryItem | null }>;
 
 type EvtOverData = {
-      item: TInventoryItem;
-      inventoryId: Id;
-      index: number;
+  item: TInventoryItem;
+  inventoryId: Id;
+  index: number;
 };
 
 type EvtActiveData = {
-  inventoryId: Id
-      index: number;
-}
+  inventoryId: Id;
+  index: number;
+};
 
 const MainPage: FC = () => {
   const inventoriesId = ["A", "B"];
@@ -72,7 +73,7 @@ const MainPage: FC = () => {
 
     if (overCellData.inventoryId === activeItemData.inventoryId) {
       const newArr = swapElementsInsideArray(
-        overCellData.index ,
+        overCellData.index,
         activeItemData.index,
         overCellData.inventoryId === "A" ? inventoryA : inventoryB,
       );
@@ -84,9 +85,9 @@ const MainPage: FC = () => {
       if (overCellData.inventoryId === "B") {
         const [arrayA, arrayB] = swapElementsBetweenArrays(
           activeItemData.index,
-          overCellData.index ,
+          overCellData.index,
           inventoryA,
-          inventoryB
+          inventoryB,
         );
 
         setInventoryA(arrayA!);
@@ -94,9 +95,9 @@ const MainPage: FC = () => {
       } else {
         const [arrayB, arrayA] = swapElementsBetweenArrays(
           activeItemData.index,
-          overCellData.index ,
+          overCellData.index,
           inventoryB,
-          inventoryA
+          inventoryA,
         );
 
         setInventoryA(arrayA!);
@@ -135,11 +136,9 @@ const MainPage: FC = () => {
         ))}
       </main>
 
-      {/* <Portal>
-        <DragOverlay>
-          {activeItem && <InventoryItem item={activeItem} />}
-        </DragOverlay>
-      </Portal> */}
+      {/* <DragOverlay>
+        {activeItem && <InventoryItem item={activeItem} />}
+      </DragOverlay> */}
     </DndContext>
   );
 };

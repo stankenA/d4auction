@@ -7,6 +7,7 @@ import { type TInventoryItem } from "./types";
 import { CSS } from "@dnd-kit/utilities";
 import { useDraggable } from "@dnd-kit/core";
 import { type Id } from "@/types/types";
+import Image from "next/image";
 
 type InventoryItemProps = PropsWithChildren & {
   item: TInventoryItem;
@@ -39,10 +40,9 @@ const InventoryItem: FC<InventoryItemProps> = ({
       style={style}
       {...attributes}
       {...listeners}
-      className="h-full w-full bg-grey"
+      className="relative h-full w-full"
     >
-      {item.id}
-      {children}
+      <Image src={item.img} fill alt={item.description} />
     </div>
   );
 };

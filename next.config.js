@@ -17,6 +17,16 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "wow.zamimg.com",
+        port: "",
+        pathname: "**",
+      },
+    ],
+  },
 };
 
 export default config;
