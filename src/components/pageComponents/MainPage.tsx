@@ -137,7 +137,9 @@ const MainPage: FC = () => {
       </main>
 
       <DragOverlay>
-        {activeItem && <InventoryItem item={activeItem} />}
+        {activeItem && (
+          <InventoryItem item={activeItem} isHoverActive={false} />
+        )}
       </DragOverlay>
     </DndContext>
   );
